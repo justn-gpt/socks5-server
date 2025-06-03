@@ -1,0 +1,17 @@
+{
+    "address": ":1080",
+    "users": {
+        "admin": "admin"
+    },
+    "tls": {
+        "enable": false,
+        "cert_file": "cert.pem",
+        "key_file": "key.pem"
+    },
+    "udp": {
+        "enable": true,
+        "address": "",
+        "buffer_size": 4096,
+        "timeout": 60
+    }
+}
