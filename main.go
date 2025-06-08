@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"os"
-
 )
 
 func main() {
@@ -13,21 +12,21 @@ func main() {
 
 	log.Printf("尝试加载配置文件: %s", *configPath)
 
-	cfg, err := socks5.LoadConfig(*configPath)
+	cfg, err := LoadConfig(*configPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			log.Printf("配置文件 %s 不存在，尝试使用环境变量配置", *configPath)
-			cfg = socks5.ParseOSEnvCfg()
+			log.Printf("配置文件不存在，尝试使用环境变量配置")
+			cfg = parseOSEnvCfg()
 		} else {
 			log.Fatalf("加载配置文件失败: %v", err)
 		}
 	}
 
-	socks5.CheckServerCfgDefault(cfg)
+	CheckServerCfgDefault(cfg)
 
 	log.Printf("加载到配置: %+v", cfg)
 
-	server, err := socks5.NewServer(cfg)
+	server, err := NewServer(cfg)
 	if err != nil {
 		log.Fatalf("创建服务器失败: %v", err)
 	}
