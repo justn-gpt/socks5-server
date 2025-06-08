@@ -5,11 +5,11 @@ import (
 	"log"
 	"os"
 
-	"yourmodulepath/socks5"  // 根据你的项目模块名调整
+	"socks5-server/socks5"  // 按你项目实际路径调整
 )
 
 func main() {
-	configPath := flag.String("c", "ss5.json", "配置文件路径")
+	configPath := flag.String("c", "config.json", "配置文件路径")
 	flag.Parse()
 
 	log.Printf("尝试加载配置文件: %s", *configPath)
@@ -17,12 +17,14 @@ func main() {
 	cfg, err := socks5.LoadConfig(*configPath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			log.Printf("配置文件不存在，尝试从环境变量读取配置")
+			log.Printf("配置文件 %s 不存在，尝试使用环境变量配置", *configPath)
 			cfg = socks5.ParseOSEnvCfg()
 		} else {
 			log.Fatalf("加载配置文件失败: %v", err)
 		}
 	}
+
+	socks5.CheckServerCfgDefault(cfg)
 
 	log.Printf("加载到配置: %+v", cfg)
 
