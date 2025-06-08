@@ -4,20 +4,23 @@ on:
   workflow_dispatch:  # 支持手动触发
   push:
     tags:
-      - 'v*'
+      - 'v*'          # 监听版本号 tag
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Go
+      - name: Set up Go 1.21
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: "1.21"
+
+      - name: Print Go version
+        run: go version
 
       - name: Build for FreeBSD amd64
         env:
@@ -26,16 +29,16 @@ jobs:
           GOARCH: amd64
         run: |
           mkdir -p dist
-          VERSION=${GITHUB_REF##*/}  # 解析 tag 为版本号
-          go build -ldflags="-s -w -X main.Version=$VERSION" -o dist/5-freebsd-amd64 .
-          file dist/5-freebsd-amd64
+          VERSION=${GITHUB_REF##*/}
+          go build -ldflags="-s -w -X main.Version=$VERSION" -o dist/s5 .
+          file dist/s5
           ls -lh dist/
 
-      - name: Upload to GitHub Release
+      - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          files: dist/5-freebsd-amd64
+          files: dist/s5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
