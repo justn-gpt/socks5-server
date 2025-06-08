@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"socks5-server"  // 注意这里导入模块本身，或者如果是根目录，import 可能不需要额外路径
 )
 
 func main() {
